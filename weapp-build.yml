@@ -1,0 +1,24 @@
+name: Build Weapp Dist
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install client deps
+        working-directory: client
+        run: npm install
+      - name: Build weapp
+        working-directory: client
+        run: npx taro build --type weapp
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: weapp-dist
+          path: client/dist
